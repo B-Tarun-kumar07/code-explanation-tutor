@@ -1,5 +1,15 @@
 import streamlit as st
 import ollama
+import base64
+
+
+# ==========================================
+# BACKGROUND IMAGE FUNCTION
+# ==========================================
+
+def get_base64_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
 
 
 # ==========================================
@@ -11,6 +21,258 @@ st.set_page_config(
     page_icon="💻",
     layout="wide"
 )
+
+
+# ==========================================
+# ROBOT BACKGROUND + UI STYLING
+# ==========================================
+
+try:
+
+    background_image = get_base64_image(
+        "assets/robot-bg.png"
+    )
+
+    st.markdown(
+        f"""
+        <style>
+
+        /* ==========================================
+           MAIN APPLICATION
+           ========================================== */
+
+        .stApp {{
+            background-image:
+                linear-gradient(
+                    rgba(5, 10, 25, 0.25),
+                    rgba(5, 10, 25, 0.25)
+                ),
+                url("data:image/png;base64,{background_image}");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+
+
+        /* ==========================================
+           CENTER MAIN CONTENT
+           ========================================== */
+
+        .block-container {{
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 3rem;
+            padding-left: 3rem;
+            padding-right: 3rem;
+            padding-bottom: 3rem;
+        }}
+
+
+        /* ==========================================
+           MAIN TEXT - WHITE
+           ========================================== */
+
+        .block-container h1,
+        .block-container h2,
+        .block-container h3,
+        .block-container h4,
+        .block-container h5,
+        .block-container h6,
+        .block-container p,
+        .block-container label,
+        .block-container .stMarkdown,
+        .block-container .stText,
+        .block-container .stCaption {{
+            color: #ffffff !important;
+        }}
+
+
+        /* ==========================================
+           SIDEBAR
+           ========================================== */
+
+        section[data-testid="stSidebar"] {{
+            background: rgba(245, 247, 250, 0.96);
+            border-right: 1px solid rgba(0, 0, 0, 0.12);
+        }}
+
+
+        /* Sidebar text - BLACK */
+
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] h4,
+        section[data-testid="stSidebar"] h5,
+        section[data-testid="stSidebar"] h6,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] .stMarkdown,
+        section[data-testid="stSidebar"] .stText,
+        section[data-testid="stSidebar"] .stCaption {{
+            color: #111827 !important;
+        }}
+
+
+        /* Sidebar divider */
+
+        section[data-testid="stSidebar"] hr {{
+            border-color: rgba(0, 0, 0, 0.15);
+        }}
+
+
+        /* ==========================================
+           FILE UPLOADER
+           ========================================== */
+
+        div[data-testid="stFileUploaderDropzone"] {{
+            background: rgba(0, 0, 0, 0.70) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            border-radius: 14px !important;
+        }}
+
+
+        /* Upload area text */
+
+        div[data-testid="stFileUploaderDropzone"] span,
+        div[data-testid="stFileUploaderDropzone"] small,
+        div[data-testid="stFileUploaderDropzone"] p {{
+            color: #ffffff !important;
+        }}
+
+
+        /* Upload button */
+
+        div[data-testid="stFileUploaderDropzone"] button {{
+            background-color: #111827 !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
+            border-radius: 8px !important;
+        }}
+
+
+        /* Upload button text */
+
+        div[data-testid="stFileUploaderDropzone"] button span {{
+            color: #ffffff !important;
+        }}
+
+
+        /* Upload button hover */
+
+        div[data-testid="stFileUploaderDropzone"] button:hover {{
+            background-color: #000000 !important;
+            border-color: #ffffff !important;
+        }}
+
+
+        /* ==========================================
+           SELECT BOX
+           ========================================== */
+
+        div[data-baseweb="select"] {{
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+        }}
+
+
+        div[data-baseweb="select"] * {{
+            color: #111827 !important;
+        }}
+
+
+        /* ==========================================
+           TEXT INPUT
+           ========================================== */
+
+        div[data-baseweb="input"] {{
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+        }}
+
+
+        div[data-baseweb="input"] input {{
+            color: #111827 !important;
+        }}
+
+
+        /* ==========================================
+           METRICS
+           ========================================== */
+
+        div[data-testid="stMetric"] {{
+            background: rgba(0, 0, 0, 0.55);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }}
+
+
+        div[data-testid="stMetric"] label,
+        div[data-testid="stMetric"] div {{
+            color: #ffffff !important;
+        }}
+
+
+        /* ==========================================
+           TABS
+           ========================================== */
+
+        button[data-baseweb="tab"] {{
+            color: #ffffff !important;
+        }}
+
+
+        /* ==========================================
+           BUTTONS
+           ========================================== */
+
+        .stButton > button {{
+            border-radius: 10px;
+            font-weight: 600;
+        }}
+
+
+        /* ==========================================
+           CODE BLOCK
+           ========================================== */
+
+        pre {{
+            border-radius: 12px;
+        }}
+
+
+        /* ==========================================
+           INFO / SUCCESS / WARNING BOXES
+           ========================================== */
+
+        div[data-testid="stAlert"] {{
+            border-radius: 10px;
+        }}
+
+
+        /* ==========================================
+           DIVIDERS
+           ========================================== */
+
+        hr {{
+            border-color: rgba(255, 255, 255, 0.25);
+        }}
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+except FileNotFoundError:
+
+    st.warning(
+        "Robot background image not found. "
+        "Make sure assets/robot-bg.png exists."
+    )
 
 
 # ==========================================
@@ -75,7 +337,10 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    # Read file
+    # ==========================================
+    # READ FILE
+    # ==========================================
+
     try:
 
         code = uploaded_file.read().decode("utf-8")
@@ -90,7 +355,10 @@ if uploaded_file is not None:
         st.stop()
 
 
-    # Check empty file
+    # ==========================================
+    # EMPTY FILE CHECK
+    # ==========================================
+
     if not code.strip():
 
         st.warning(
@@ -125,19 +393,25 @@ if uploaded_file is not None:
 
     col1, col2, col3 = st.columns(3)
 
+
     with col1:
+
         st.metric(
             "Total Lines",
             total_lines
         )
 
+
     with col2:
+
         st.metric(
             "Code Lines",
             code_lines
         )
 
+
     with col3:
+
         st.metric(
             "Characters",
             character_count
@@ -192,6 +466,10 @@ if uploaded_file is not None:
         )
 
 
+        # ==========================================
+        # CUSTOM QUESTION
+        # ==========================================
+
         st.subheader("💬 Ask Your Own Question")
 
         custom_question = st.text_input(
@@ -202,13 +480,20 @@ if uploaded_file is not None:
         st.write("")
 
 
+        # ==========================================
+        # ASK AI BUTTON
+        # ==========================================
+
         if st.button(
             "🤖 Ask AI",
             type="primary",
             use_container_width=True
         ):
 
-            # Select question
+            # ==========================================
+            # SELECT QUESTION
+            # ==========================================
+
             if custom_question.strip():
 
                 question = custom_question.strip()
@@ -303,11 +588,11 @@ if uploaded_file is not None:
                         )
 
 
-else:
+# ==========================================
+# INITIAL STATE
+# ==========================================
 
-    # ==========================================
-    # INITIAL STATE
-    # ==========================================
+else:
 
     st.info(
         "👆 Upload a Python file above to get started."
