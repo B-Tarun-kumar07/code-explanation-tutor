@@ -60,14 +60,14 @@ try:
            ========================================== */
 
         .block-container {{
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-top: 3rem;
-            padding-left: 3rem;
-            padding-right: 3rem;
-            padding-bottom: 3rem;
-        }}
+    max-width: 1050px;
+    margin-left: 32%;
+    margin-right: 5%;
+    padding-top: 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 3rem;
+}}
 
 
         /* ==========================================
